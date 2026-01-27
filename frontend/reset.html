@@ -1,0 +1,21 @@
+<input id="password" type="password" placeholder="new password">
+<button onclick="reset()">Reset</button>
+
+<script>
+const params = new URLSearchParams(window.location.search)
+const token = params.get("token")
+
+async function reset(){
+
+  await fetch("http://localhost:5000/api/auth/reset",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      token,
+      newPassword:password.value
+    })
+  })
+
+  alert("Password updated")
+}
+</script>

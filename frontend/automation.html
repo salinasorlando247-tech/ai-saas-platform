@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Internal Automation Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Internal Automation Panel</h1>
+    <div>
+      <span id="user-label">Internal User</span>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="job-section">
+      <h2>Create New AI Job</h2>
+      <textarea id="job-prompt" placeholder="Enter prompt for AI"></textarea>
+      <select id="job-type">
+        <option value="ai-video">AI Video</option>
+        <option value="ai-text">AI Text</option>
+      </select>
+      <button onclick="createJob()">Create Job</button>
+    </section>
+
+    <section id="jobs-list-section">
+      <h2>Job Queue</h2>
+      <table id="jobs-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Prompt</th>
+            <th>Result</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section id="usage-section">
+      <h2>Usage / Cost</h2>
+      <pre id="usage"></pre>
+    </section>
+  </main>
+
+  <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
+  <script src="automation.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Dashboard</title>
+</head>
+<body>
+
+<h1>AI Dashboard</h1>
+
+<div>
+  <textarea id="prompt" placeholder="Enter AI prompt"></textarea>
+  <button onclick="sendPrompt()">Run AI</button>
+</div>
+
+<div id="result"></div>
+<div id="usageBox"></div>
+
+<script>
+async function loadUsage() {
+  const token = localStorage.getItem("token");
+  const res = await fetch("http://localhost:5000/api/usage", {
+    headers: { "Authorization": token }
+  });
+  const data = await res.json();
+  usageBox.innerHTML = `Usage: ${data.used} AI jobs this month`;
+}
+
+async function sendPrompt() {
+  const token = localStorage.getItem("token");
+  const promptValue = prompt.value;
+  const res = await fetch("http://localhost:5000/api/pipeline", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify({ prompt: promptValue })
+  });
+  const data = await res.json();
+
+  if (data.error === "Monthly quota reached") {
+    alert("Quota reached. Upgrade plan to continue.");
+    window.location.href = "pricing.html";
+  } else {
+    result.innerText = JSON.stringify(data, null, 2);
+  }
+
+  loadUsage();
+}
+
+loadUsage();
+</script>
+</body>
+</html>

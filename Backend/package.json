@@ -1,24 +1,24 @@
 {
-  "name": "backend",
+  "name": "ai-saas-backend",
   "version": "1.0.0",
-  "type": "module",
+  "description": "AI SaaS Backend with Stripe and OpenAI integration",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
-    "bcrypt": "^6.0.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.2.3",
-    "express": "^4.18.2",
-    "express-rate-limit": "^8.2.1",
-    "helmet": "^8.1.0",
-    "jsonwebtoken": "^9.0.3",
-    "lowdb": "^6.0.1",
-    "node-cron": "^4.2.1",
-    "nodemailer": "^7.0.12",
-    "socket.io": "^4.8.3",
-    "stripe": "^20.2.0",
-    "uuid": "^13.0.0"
-  }
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "openai": "^4.26.0",
+    "stripe": "^14.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "author": "Your Name",
+  "license": "ISC"
 }

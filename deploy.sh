@@ -1,9 +1,12 @@
 #!/bin/bash
 
-echo "Deploying AI SaaS Platform..."
+echo "Starting AI SaaS deployment..."
 
-docker-compose down
-docker-compose build
-docker-compose up -d
+# Stop existing containers
+docker compose down
 
-echo "Deployment complete"
+# Build and start containers
+docker compose build
+docker compose up -d
+
+echo "Deployment complete!"

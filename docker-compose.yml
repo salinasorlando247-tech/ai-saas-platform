@@ -1,9 +1,7 @@
-version: '3.9'
-
 services:
   backend:
     build:
-      context: .        # project root where Dockerfile is
+      context: .         # root project folder (backend Dockerfile here)
     container_name: nodetest-backend
     ports:
       - "5000:5000"

@@ -1,16 +1,22 @@
-# Build stage
-FROM node:18-alpine AS build
+# Stage 1: Build
+FROM node:18-slim AS build
 
 WORKDIR /app
 
+# Install dependencies
 COPY package*.json ./
 RUN npm install
 
+# Copy frontend source
 COPY . .
+
+# Build production assets
 RUN npm run build
 
-# Production stage
+# Stage 2: Production
 FROM nginx:alpine
+
+# Copy build output to nginx
 COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80

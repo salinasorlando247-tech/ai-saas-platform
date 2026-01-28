@@ -1,28 +1,24 @@
 import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
 import aiWorker from './aiworker.js';
 
-dotenv.config();
-
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 5000;
 
-app.get('/', (req, res) => res.send('AI SaaS Backend is running!'));
+app.get('/', (req, res) => {
+  res.send('AI SaaS Backend is running!');
+});
 
 app.post('/api/ai', async (req, res) => {
+  const { prompt } = req.body;
   try {
-    const { prompt } = req.body;
-    if (!prompt) return res.status(400).json({ error: 'No prompt provided' });
-
     const result = await aiWorker(prompt);
     res.json({ result });
   } catch (err) {
-    console.error('AI request error:', err);
-    res.status(500).json({ error: 'AI request failed' });
+    console.error(err);
+    res.status(500).json({ error: 'AI Worker error' });
   }
 });
 

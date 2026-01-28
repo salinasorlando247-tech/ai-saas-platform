@@ -1,9 +1,9 @@
-# Use Node.js 18 LTS
+# Backend Dockerfile
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package.json from Backend and install dependencies
+# Copy package.json and install dependencies
 COPY Backend/package*.json ./
 RUN npm install --omit=dev
 

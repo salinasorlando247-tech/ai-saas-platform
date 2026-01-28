@@ -1,19 +1,4 @@
-import OpenAI from 'openai';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 export default async function aiWorker(prompt) {
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4',
-      messages: [{ role: 'user', content: prompt }]
-    });
-    return response.choices[0].message.content;
-  } catch (err) {
-    console.error('OpenAI error:', err);
-    throw err;
-  }
+  // Replace with your actual AI call (OpenAI or custom logic)
+  return `Echo from AI Worker: ${prompt}`;
 }

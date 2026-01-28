@@ -1,81 +1,36 @@
-import React, { useState } from "react";
-import Analytics from "./components/Analytics";
-import AskAI from "./components/AskAI";
-import EngagementPrediction from "./components/EngagementPrediction";
-import BestPostingTime from "./components/BestPostingTime";
-import CreatePost from "./components/CreatePost";
-import ManualVideo from "./components/ManualVideo";
-import "./styles/App.css";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function App() {
-  const [aiResponse, setAiResponse] = useState("");
-  const [postContent, setPostContent] = useState("");
+export default function App() {
+  const [prompt, setPrompt] = useState('');
+  const [response, setResponse] = useState('');
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const handleSubmit = async () => {
+    try {
+      const res = await axios.post(`${BACKEND_URL}/api/ai`, { prompt });
+      setResponse(res.data.result);
+    } catch (err) {
+      console.error(err);
+      setResponse('Error calling AI backend');
+    }
+  };
 
   return (
-    <div className="dashboard">
-
-      {/* Analytics Card */}
-      <div className="futuristic-card">
-        <h2>Analytics</h2>
-        <Analytics />
-      </div>
-
-      {/* Ask AI Card */}
-      <div className="futuristic-card">
-        <h2>Ask AI</h2>
-        <AskAI setAiResponse={setAiResponse} />
-        {aiResponse && <div className="ai-answer">{aiResponse}</div>}
-      </div>
-
-      {/* Engagement Prediction */}
-      <div className="futuristic-card">
-        <h2>Engagement Prediction</h2>
-        <EngagementPrediction />
-      </div>
-
-      {/* Best Posting Time */}
-      <div className="futuristic-card">
-        <h2>Best Posting Time</h2>
-        <BestPostingTime />
-      </div>
-
-      {/* Create Post */}
-      <div className="futuristic-card">
-        <h2>Create Post</h2>
-        <textarea
-          className="futuristic-input"
-          placeholder="Type your post content here..."
-          value={postContent}
-          onChange={(e) => setPostContent(e.target.value)}
-        />
-        <button className="futuristic-btn">Submit Post</button>
-      </div>
-
-      {/* Manual Video Creation */}
-      <div className="futuristic-card">
-        <h2>Manual Video Creation</h2>
-        <ManualVideo />
-        <button className="futuristic-btn">Create Video</button>
-      </div>
-
-      {/* Industry Insights / Extra */}
-      <div className="futuristic-card">
-        <h2>Industry Insights</h2>
-        <ul>
-          <li>Top Trending AI Tools</li>
-          <li>Competitor Analysis</li>
-          <li>Market Trends</li>
-        </ul>
-      </div>
-
-      {/* Additional futuristic widget (e.g., clock) */}
-      <div className="futuristic-card">
-        <h2>AI Command Clock</h2>
-        <div className="clock-animation">🕒</div>
-      </div>
-
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <h1>AI SaaS Frontend</h1>
+      <textarea
+        rows="4"
+        cols="50"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        placeholder="Enter prompt here..."
+      />
+      <br />
+      <button onClick={handleSubmit}>Submit</button>
+      <h2>Response:</h2>
+      <pre>{response}</pre>
     </div>
   );
 }
-
-export default App;

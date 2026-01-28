@@ -1,12 +1,26 @@
-version: "3.8"
+version: '3.9'
 
 services:
   backend:
     build:
-      context: ./Backend
-    container_name: ai-saas-backend
+      context: .        # project root where Dockerfile is
+    container_name: nodetest-backend
     ports:
       - "5000:5000"
-    env_file:
-      - ./Backend/.env
+    environment:
+      PORT: 5000
+      OPENAI_API_KEY: your_openai_key
+      JWT_SECRET: your_jwt_secret
+      STRIPE_SECRET_KEY: your_stripe_key
+    restart: unless-stopped
+
+  frontend:
+    build: ./Frontend
+    container_name: nodetest-frontend
+    ports:
+      - "80:80"
+    environment:
+      VITE_BACKEND_URL: http://backend:5000
+    depends_on:
+      - backend
     restart: unless-stopped

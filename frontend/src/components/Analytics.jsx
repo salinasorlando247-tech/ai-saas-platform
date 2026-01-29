@@ -1,37 +1,14 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-
-function Analytics() {
-  const [data, setData] = useState([]);
-
-  const fetchAnalytics = async () => {
-    const res = await axios.get("http://localhost:5000/api/analytics");
-    setData(res.data);
-  };
-
-  useEffect(() => {
-    fetchAnalytics();
-  }, []);
-
+export default function Analytics(){
   return (
-    <div>
-      {data.length === 0 && <p>No analytics data yet</p>}
-
-      {data.map((item, index) => (
-        <div key={index} style={{ marginBottom: "10px" }}>
-          <strong>Post ID:</strong> {item.postId}<br />
-          ❤️ Likes: {item.likes} | 🔁 Shares: {item.shares} | 💬 Comments: {item.comments}
-        </div>
-      ))}
-
-      <button
-        className="futuristic-btn"
-        onClick={fetchAnalytics}
-      >
-        Refresh Data
-      </button>
+    <div style={{ border:"1px solid #0ff", padding:"1rem", borderRadius:"10px" }}>
+      <h3>Analytics</h3>
+      <ul>
+        <li>YouTube: 0 views</li>
+        <li>Instagram: 0 likes</li>
+        <li>TikTok: 0 views</li>
+        <li>LinkedIn: 0 clicks</li>
+        <li>Snapchat: 0 engagements</li>
+      </ul>
     </div>
-  );
+  )
 }
-
-export default Analytics;

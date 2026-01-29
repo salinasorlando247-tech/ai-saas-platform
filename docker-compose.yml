@@ -1,24 +1,23 @@
 services:
   backend:
     build:
-      context: .         # root project folder (backend Dockerfile here)
+      context: .
+      dockerfile: Dockerfile
     container_name: nodetest-backend
     ports:
       - "5000:5000"
     environment:
-      PORT: 5000
-      OPENAI_API_KEY: your_openai_key
-      JWT_SECRET: your_jwt_secret
-      STRIPE_SECRET_KEY: your_stripe_key
-    restart: unless-stopped
+      - STRIPE_SECRET_KEY=your_stripe_secret_here
+    volumes:
+      - ./Backend/uploads:/app/uploads
+      - ./Backend/output_videos:/app/output_videos
 
   frontend:
-    build: ./Frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: nodetest-frontend
     ports:
-      - "80:80"
-    environment:
-      VITE_BACKEND_URL: http://backend:5000
+      - "3000:3000"
     depends_on:
       - backend
-    restart: unless-stopped

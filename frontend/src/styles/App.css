@@ -1,191 +1,175 @@
-/* Reset and base */
-body, html {
+/* Global resets */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: 'Orbitron', sans-serif;
-  background: linear-gradient(135deg, #0d0d2b, #010114);
-  color: #ffffff;
-  min-height: 100vh;
 }
 
-/* Smooth transitions for everything */
-* {
-  transition: all 0.3s ease-in-out;
+body {
+  background-color: #0a0a1a;
+  color: #e0e0e0;
 }
 
-/* Container for all cards */
-.dashboard {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem;
-  padding: 2rem;
-}
-
-/* Futuristic card design */
-.futuristic-card {
-  background: rgba(20, 20, 40, 0.7);
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), 0 0 60px rgba(0, 255, 255, 0.1) inset;
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Glow animation */
-.futuristic-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, #00ffff, #ff00ff, #00ff00, #ff0000);
-  background-size: 400% 400%;
-  animation: gradientGlow 8s ease infinite;
-  opacity: 0.2;
-  pointer-events: none;
-}
-
-@keyframes gradientGlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Card headings */
-.futuristic-card h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  color: #00ffff;
-  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
-}
-
-/* Metrics inside cards */
-.metrics-grid {
-  display: flex;
-  justify-content: space-between;
-}
-
-.metric {
-  flex: 1;
-  margin-right: 1rem;
-}
-
-.metric h3 {
-  font-size: 1rem;
-  color: #ff00ff;
-  text-shadow: 0 0 3px #ff00ff;
-}
-
-.metric-value {
-  font-size: 1.5rem;
-  color: #00ffff;
+/* Header */
+.app-header {
+  background: linear-gradient(90deg, #0ff, #0af);
+  padding: 20px 40px;
+  text-align: center;
+  font-size: 2rem;
   font-weight: bold;
+  text-shadow: 0 0 10px #0ff;
+  letter-spacing: 2px;
 }
 
-/* Input fields */
-.futuristic-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 8px;
-  background: rgba(0, 255, 255, 0.1);
-  color: #00ffff;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2) inset;
+/* Footer */
+.app-footer {
+  background: #0a0a1a;
+  text-align: center;
+  padding: 10px;
+  font-size: 0.9rem;
+  color: #555;
+  border-top: 1px solid #0ff;
 }
 
-.futuristic-input::placeholder {
-  color: rgba(0, 255, 255, 0.5);
+/* Main layout */
+.app-main {
+  display: flex;
+  gap: 20px;
+  padding: 20px 40px;
+}
+
+/* Left and right panels */
+.left-panel, .right-panel {
+  flex: 1;
+  background: #111128;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+/* Section headers */
+h2 {
+  margin-bottom: 15px;
+  color: #0ff;
+  text-shadow: 0 0 8px #0ff;
 }
 
 /* Buttons */
-.futuristic-btn {
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #00ffff, #ff00ff);
+button {
+  background: linear-gradient(90deg, #0ff, #0aa);
   border: none;
   border-radius: 8px;
-  color: #010114;
+  padding: 10px 15px;
+  color: #0a0a1a;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 0 15px #00ffff, 0 0 25px #ff00ff;
+  transition: 0.3s;
+  margin-top: 10px;
+  text-shadow: 0 0 3px #000;
 }
 
-.futuristic-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px #00ffff, 0 0 35px #ff00ff;
+button:hover {
+  background: linear-gradient(90deg, #0aa, #0ff);
+  box-shadow: 0 0 15px #0ff;
 }
 
-/* AI answer box */
-.ai-answer {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  border-radius: 8px;
-  background: rgba(255, 0, 255, 0.1);
-  color: #ff00ff;
-  text-shadow: 0 0 5px #ff00ff;
-}
-
-/* Progress bar */
-.prediction-bar {
+/* AI Editor */
+.ai-editor textarea {
   width: 100%;
-  background: rgba(0, 255, 255, 0.1);
-  border-radius: 8px;
-  height: 20px;
-  margin: 0.5rem 0;
-}
-
-.prediction-bar .progress {
-  height: 100%;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #00ffff, #ff00ff);
-  box-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
-}
-
-/* Clock animation */
-.clock-animation {
-  font-size: 2rem;
-  animation: rotateClock 4s linear infinite;
-}
-
-@keyframes rotateClock {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Lists */
-.futuristic-card ul {
-  list-style: none;
-  padding: 0;
-}
-
-.futuristic-card li {
-  margin-bottom: 0.5rem;
-  color: #00ffff;
-  text-shadow: 0 0 5px #00ffff;
-}
-
-/* Textarea */
-textarea.futuristic-input {
-  resize: none;
   min-height: 80px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  padding: 10px;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  font-family: 'Orbitron', sans-serif;
 }
 
-/* Scrollbar for futuristic feel */
+.input-preview, .output-preview {
+  margin-top: 15px;
+}
+
+video, img {
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #0ff;
+}
+
+/* Post Queue */
+.post-queue ul {
+  list-style: none;
+}
+
+.queue-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111128;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+/* Analytics */
+.analytics {
+  background: #111128;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.analytics canvas {
+  max-width: 100%;
+}
+
+/* Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 20, 0.5);
+  background: #0a0a1a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #00ffff;
+  background: #0ff;
   border-radius: 4px;
-  box-shadow: 0 0 5px #00ffff;
+}
+/* Payments & Platforms */
+.payments, .platforms {
+  margin-top: 20px;
+  background: #111128;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.payments input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  margin-bottom: 10px;
+}
+
+.payment-methods, .platform-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.payment-methods button, .platform-buttons button {
+  flex: 1;
+}
+
+button.active {
+  background: linear-gradient(90deg, #0ff, #0aa);
+  box-shadow: 0 0 20px #0ff;
 }

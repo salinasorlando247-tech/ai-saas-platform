@@ -1,0 +1,20 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+  color: #fff;
+}
+button {
+  transition: all 0.3s ease;
+}
+button:hover {
+  filter: brightness(1.2);
+}
+textarea {
+  background: rgba(255,255,255,0.05);
+  color: #0ff;
+  border: 1px solid #0ff;
+  border-radius: 12px;
+  padding: 0.5rem;
+}

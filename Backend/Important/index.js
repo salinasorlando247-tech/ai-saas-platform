@@ -1,25 +1,24 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import aiWorker from './aiworker.js';
+import express from "express";
+import cors from "cors";
+import multer from "multer";
+import aiRouter from "./routes/ai.js";
+import queueRouter from "./routes/queue.js";
+import paymentsRouter from "./routes/payments.js";
+import analyticsRouter from "./routes/analytics.js";
 
 const app = express();
-app.use(bodyParser.json());
-
 const PORT = process.env.PORT || 5000;
 
-app.get('/', (req, res) => {
-  res.send('AI SaaS Backend is running!');
-});
+app.use(cors());
+app.use(express.json());
 
-app.post('/api/ai', async (req, res) => {
-  const { prompt } = req.body;
-  try {
-    const result = await aiWorker(prompt);
-    res.json({ result });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'AI Worker error' });
-  }
-});
+// Multer for file uploads
+const upload = multer({ dest: "uploads/" });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Routes
+app.use("/api/ai", aiRouter(upload));
+app.use("/api/queue", queueRouter);
+app.use("/api/payments", paymentsRouter);
+app.use("/api/analytics", analyticsRouter);
+
+app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));

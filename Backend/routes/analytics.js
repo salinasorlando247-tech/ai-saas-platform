@@ -1,28 +1,16 @@
 import express from "express";
-import { db } from "../../index.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  await db.read();
-  res.json(db.data.analytics);
-});
-
-router.post("/update", async (req, res) => {
-  const { postId, likes, shares, comments } = req.body;
-
-  await db.read();
-
-  db.data.analytics.push({
-    postId,
-    likes,
-    shares,
-    comments
-  });
-
-  await db.write();
-
-  res.json({ success: true });
+// Sample analytics
+router.get("/", (req, res) => {
+  res.json([
+    { platform: "YouTube", views: 1200 },
+    { platform: "TikTok", views: 950 },
+    { platform: "Instagram", views: 760 },
+    { platform: "LinkedIn", views: 430 },
+    { platform: "Snapchat", views: 210 },
+  ]);
 });
 
 export default router;

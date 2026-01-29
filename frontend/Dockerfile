@@ -1,22 +1,21 @@
-# Stage 1: Build React app
-FROM node:18 AS build
-
+# Stage 1: Build
+FROM node:18 AS builder
 WORKDIR /app
 
-# Install system dependencies for Vite/esbuild
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
-
+# Copy package files first
 COPY package*.json ./
+
+# Install dependencies including dev (needed for build)
 RUN npm install
 
+# Copy everything else
 COPY . .
+
+# Build frontend
 RUN npm run build
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
-
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 3000
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

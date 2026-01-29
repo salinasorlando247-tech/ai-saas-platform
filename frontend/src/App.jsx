@@ -1,31 +1,18 @@
 import React from "react";
-import AIEditor from "./AIEditor.jsx";
-import PostQueue from "./PostQueue.jsx";
-import Analytics from "./Analytics.jsx";
-import Payments from "./Payments.jsx";
-import "./App.css";
+import PostQueue from "./components/PostQueue";
+import AnalyticsDashboard from "./components/AnalyticsDashboard";
+import PaymentTiers from "./components/PaymentTiers";
+import "./styles.css";
 
 export default function App() {
   return (
     <div className="app-container">
-      <header className="app-header">
-        <h1>AI Social Media Automater</h1>
-      </header>
-
-      <main className="app-main">
-        <section className="left-panel">
-          <AIEditor />
-          <PostQueue />
-          <Payments />
-        </section>
-        <section className="right-panel">
-          <Analytics />
-        </section>
+      <header className="header"><h1>🔥 AI Social Media Automater</h1></header>
+      <main>
+        <section className="queue-section"><h2>Video Queue</h2><PostQueue /></section>
+        <section className="analytics-section"><h2>Analytics Dashboard</h2><AnalyticsDashboard /></section>
+        <section className="payments-section"><h2>Payment Tiers</h2><PaymentTiers /></section>
       </main>
-
-      <footer className="app-footer">
-        <p>© 2026 Your Company — All Rights Reserved</p>
-      </footer>
     </div>
   );
 }

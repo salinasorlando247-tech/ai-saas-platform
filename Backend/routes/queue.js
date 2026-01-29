@@ -1,23 +1,21 @@
 import express from "express";
-
+const router = express.Router();
 let queue = [
-  { id: 1, title: "Sample Post", status: "pending", platforms: ["YouTube"] },
+  { id: 1, title: "Sample Video 1", filePath: "./videos/sample1.mp4", status: "pending" },
+  { id: 2, title: "Sample Video 2", filePath: "./videos/sample2.mp4", status: "pending" }
 ];
 
-const router = express.Router();
-
-// Get queue
 router.get("/", (req, res) => res.json(queue));
-
-// Post now
-router.post("/post", (req, res) => {
-  const { postId, platforms } = req.body;
-  const post = queue.find((p) => p.id === postId);
-  if (!post) return res.status(404).json({ error: "Post not found" });
-
-  post.status = "posted";
-  post.platforms = platforms;
-  res.json({ success: true });
+router.post("/approve/:id", (req, res) => {
+  const item = queue.find(v => v.id == req.params.id);
+  if (item) item.status = "approved";
+  res.json({ status: "approved" });
 });
-
+router.post("/recreate/:id", (req, res) => {
+  const item = queue.find(v => v.id == req.params.id);
+  if (item) {
+    const newFile = item.filePath.replace(".mp4", "-improved.mp4");
+    res.json({ status: "recreated", newFile });
+  }
+});
 export default router;

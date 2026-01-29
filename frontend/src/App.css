@@ -1,0 +1,36 @@
+.dashboard {
+  background: radial-gradient(circle at top, #0a0a0a, #1a1a1a);
+  color: cyan;
+  font-family: 'Orbitron', sans-serif;
+  min-height: 100vh;
+}
+
+.panel {
+  border: 2px solid cyan;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 15px;
+  box-shadow: 0 0 20px cyan, 0 0 40px #0ff;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.panel:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 40px cyan, 0 0 60px #0ff;
+}
+
+.ai-assistant {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0,0,0,0.8);
+  padding: 15px 20px;
+  border-radius: 50px;
+  box-shadow: 0 0 15px cyan;
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 15px cyan; }
+  to { box-shadow: 0 0 35px #0ff; }
+}

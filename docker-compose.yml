@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   backend:
     build:
@@ -7,8 +9,9 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./Backend/uploads:/app/uploads
-      - ./Backend/output_videos:/app/output_videos
+      - .:/app
+    environment:
+      - NODE_ENV=production
 
   frontend:
     build:
@@ -16,6 +19,4 @@ services:
       dockerfile: Dockerfile
     container_name: nodetest-frontend
     ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+      - "3000:80"

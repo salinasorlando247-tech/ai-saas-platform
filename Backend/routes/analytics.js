@@ -1,16 +1,12 @@
 import express from "express";
-
 const router = express.Router();
 
-// Sample analytics
+// Mock analytics
 router.get("/", (req, res) => {
-  res.json([
-    { platform: "YouTube", views: 1200 },
-    { platform: "TikTok", views: 950 },
-    { platform: "Instagram", views: 760 },
-    { platform: "LinkedIn", views: 430 },
-    { platform: "Snapchat", views: 210 },
-  ]);
+  res.json({
+    "1": { views: 1200, likes: 200, comments: 50, shares: 10 },
+    "2": { views: 3400, likes: 500, comments: 90, shares: 25 }
+  });
 });
 
 export default router;

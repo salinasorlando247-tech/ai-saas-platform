@@ -1,17 +1,16 @@
 {
-  "name": "ai-social-backend",
+  "name": "ai-saas-backend",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
-    "express": "^4.18.2",
-    "body-parser": "^1.20.2",
+    "axios": "^1.13.4",
     "cors": "^2.8.5",
-    "multer": "^1.4.5",
-    "stripe": "^12.8.0",
-    "node-cron": "^3.0.2",
-    "uuid": "^9.0.0",
-    "axios": "^1.5.0",
-    "fluent-ffmpeg": "^2.1.2"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "fluent-ffmpeg": "^2.1.3",
+    "multer": "1.4.5-lts.1"
   }
 }

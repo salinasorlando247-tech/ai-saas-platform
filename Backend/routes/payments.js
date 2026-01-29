@@ -1,14 +1,10 @@
 import express from "express";
-
 const router = express.Router();
 
-// Simulate payments
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { amount, method } = req.body;
-
-  console.log(`Received payment: $${amount} via ${method}`);
-  // TODO: Integrate real payment gateways (Stripe, PayPal, Venmo, Cash App)
-  res.json({ success: true, message: "Payment received (simulated)" });
+  console.log(`Payment of $${amount} via ${method} received`);
+  res.json({ status: "Payment successful" });
 });
 
 export default router;

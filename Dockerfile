@@ -1,24 +1,20 @@
+# Backend Dockerfile
 FROM node:18
 
+# Set working directory
 WORKDIR /app
 
-# Install system dependencies required by ffmpeg and npm packages
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3 \
-    ffmpeg \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+# Copy package files first for caching
+COPY package*.json ./
 
-# Copy only package files first (faster caching)
-COPY Backend/package*.json ./
-
-# Install npm dependencies
+# Install exact dependencies
 RUN npm install
 
-# Copy backend code
-COPY Backend/ ./
+# Copy backend source code
+COPY . .
 
+# Expose backend port
 EXPOSE 5000
 
-CMD ["node", "index.js"]
+# Start backend
+CMD ["node", "server.js"]

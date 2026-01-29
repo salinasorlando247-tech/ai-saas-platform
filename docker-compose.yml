@@ -6,8 +6,6 @@ services:
     container_name: nodetest-backend
     ports:
       - "5000:5000"
-    environment:
-      - STRIPE_SECRET_KEY=your_stripe_secret_here
     volumes:
       - ./Backend/uploads:/app/uploads
       - ./Backend/output_videos:/app/output_videos

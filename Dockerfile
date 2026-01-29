@@ -1,19 +1,24 @@
-# Use full Node image to avoid npm install errors
 FROM node:18
 
 WORKDIR /app
 
-# Copy package.json first
+# Install system dependencies required by ffmpeg and npm packages
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3 \
+    ffmpeg \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy only package files first (faster caching)
 COPY Backend/package*.json ./
 
-# Install dependencies
+# Install npm dependencies
 RUN npm install
 
-# Copy all backend code
+# Copy backend code
 COPY Backend/ ./
 
-# Expose backend port
 EXPOSE 5000
 
-# Start backend
 CMD ["node", "index.js"]

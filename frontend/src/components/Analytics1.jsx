@@ -1,19 +1,33 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 export default function Analytics() {
-  const [data, setData] = useState({ labels: [], views: [] });
+
+  const [stats, setStats] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/analytics").then(res => setData(res.data));
+
+    fetch("http://localhost:5000/api/schedule")
+      .then(res => res.json())
+      .then(data => setStats(data));
+
   }, []);
 
   return (
-    <div>
-      <h2>Analytics (Views per Day)</h2>
-      {data.labels.map((label, i) => (
-        <div key={i}>{label}: {data.views[i]}</div>
+    <div className="card">
+
+      <h2>Analytics Dashboard</h2>
+
+      {stats.length === 0 && <p>No data yet</p>}
+
+      {stats.map((job, index) => (
+        <div key={index}>
+          <p>Platform: {job.platform}</p>
+          <p>Status: {job.status}</p>
+          <p>Time: {job.time}</p>
+          <hr />
+        </div>
       ))}
+
     </div>
   );
 }

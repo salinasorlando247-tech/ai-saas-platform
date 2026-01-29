@@ -1,17 +1,21 @@
-import BuyCreditsModal from "./BuyCreditsModal.jsx"
-import PostCreator from "./PostCreator.jsx"
-import Scheduler from "./Scheduler.jsx"
-import BrandSwitcher from "./BrandSwitcher.jsx"
-import Analytics from "./Analytics.jsx"
+import React from "react";
+import Scheduler from "./Scheduler";
+import Analytics from "./Analytics";
+import Payments from "../payments";
 
-export default function Dashboard(){
+export default function Dashboard() {
+
   return (
-    <div style={{ display:"grid", gap:"2rem" }}>
-      <BrandSwitcher/>
-      <PostCreator/>
-      <Scheduler/>
-      <Analytics/>
-      <BuyCreditsModal/>
+    <div>
+
+      <h1>AI Control Center</h1>
+
+      <Scheduler />
+
+      <Analytics />
+
+      <Payments />
+
     </div>
-  )
+  );
 }

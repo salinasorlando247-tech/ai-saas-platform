@@ -1,9 +1,16 @@
-import { publishPost } from "./contentManager.js";
+const scheduledJobs = [];
 
-export function schedulePosts() {
-  console.log("⏱️ Scheduler running (every minute)");
-  setInterval(() => {
-    // Here you could fetch queued posts from DB or JSON
-    console.log("Scheduler tick: checking for posts to publish...");
-  }, 60 * 1000);
+export function addSchedule(job) {
+
+  scheduledJobs.push({
+    ...job,
+    status: "scheduled",
+    createdAt: new Date()
+  });
+
+  return { success: true };
+}
+
+export function getSchedules() {
+  return scheduledJobs;
 }

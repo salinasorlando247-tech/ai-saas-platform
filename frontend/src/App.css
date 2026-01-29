@@ -1,36 +1,55 @@
-.dashboard {
-  background: radial-gradient(circle at top, #0a0a0a, #1a1a1a);
-  color: cyan;
-  font-family: 'Orbitron', sans-serif;
-  min-height: 100vh;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
-.panel {
-  border: 2px solid cyan;
-  border-radius: 15px;
+.app-shell {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-nav {
+  height: 60px;
+  background: #0f172a;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  background: #111827;
+  color: white;
   padding: 20px;
-  margin: 15px;
-  box-shadow: 0 0 20px cyan, 0 0 40px #0ff;
-  transition: transform 0.2s, box-shadow 0.3s;
 }
 
-.panel:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 40px cyan, 0 0 60px #0ff;
+.sidebar p {
+  cursor: pointer;
+  margin-bottom: 15px;
 }
 
-.ai-assistant {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(0,0,0,0.8);
-  padding: 15px 20px;
-  border-radius: 50px;
-  box-shadow: 0 0 15px cyan;
-  animation: glow 1.5s infinite alternate;
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background: #f1f5f9;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
 }
 
-@keyframes glow {
-  from { box-shadow: 0 0 15px cyan; }
-  to { box-shadow: 0 0 35px #0ff; }
+button {
+  padding: 10px;
+  margin-top: 10px;
+  cursor: pointer;
 }

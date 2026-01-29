@@ -1,51 +1,49 @@
-import { useState, useEffect } from "react"
+import React, { useState } from "react";
 
-export default function Scheduler(){
-  const [scheduled,setScheduled] = useState([])
-  const [content,setContent] = useState("")
-  const [platforms,setPlatforms] = useState([])
-  const [time,setTime] = useState("")
+export default function Scheduler() {
 
-  const fetchScheduled = async ()=>{
-    const res = await fetch("http://localhost:5000/api/scheduler/list")
-    const data = await res.json()
-    setScheduled(data.posts)
-  }
+  const [platform, setPlatform] = useState("TikTok");
+  const [time, setTime] = useState("");
+  const [status, setStatus] = useState("");
 
-  const schedule = async ()=>{
-    await fetch("http://localhost:5000/api/scheduler/add",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json"},
-      body: JSON.stringify({ content, media:null, platforms, postTime:time })
-    })
-    fetchScheduled()
-  }
+  const schedulePost = async () => {
 
-  const togglePlatform = (p)=>{
-    if(platforms.includes(p)) setPlatforms(platforms.filter(x=>x!==p))
-    else setPlatforms([...platforms,p])
-  }
+    const res = await fetch("http://localhost:5000/api/schedule", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ platform, time })
+    });
 
-  useEffect(()=>{ fetchScheduled() },[])
+    const data = await res.json();
+
+    if (data.success) {
+      setStatus("Post scheduled successfully");
+    }
+  };
 
   return (
-    <div style={{ border:"1px solid #0ff", padding:"1rem", borderRadius:"10px" }}>
-      <h3>Schedule Post</h3>
-      <textarea value={content} onChange={e=>setContent(e.target.value)} placeholder="Post content"/>
-      <input type="datetime-local" value={time} onChange={e=>setTime(e.target.value)}/>
-      <div>
-        {["youtube","instagram","tiktok","linkedin","snapchat"].map(p=>(
-          <label key={p} style={{ margin:"0.5rem" }}>
-            <input type="checkbox" onChange={()=>togglePlatform(p)}/> {p.charAt(0).toUpperCase()+p.slice(1)}
-          </label>
-        ))}
-      </div>
-      <button onClick={schedule} style={{ marginTop:"0.5rem", background:"#0ff", border:"none", padding:"0.5rem 1rem" }}>Schedule</button>
+    <div className="card">
 
-      <h4>Scheduled Posts</h4>
-      <ul>
-        {scheduled.map((s,i)=><li key={i}>{s.content} - {s.postTime}</li>)}
-      </ul>
+      <h2>Post Scheduler</h2>
+
+      <select value={platform} onChange={e => setPlatform(e.target.value)}>
+        <option>TikTok</option>
+        <option>YouTube</option>
+        <option>Instagram</option>
+      </select>
+
+      <input
+        type="time"
+        value={time}
+        onChange={e => setTime(e.target.value)}
+      />
+
+      <button onClick={schedulePost}>
+        Schedule Post
+      </button>
+
+      {status && <p>{status}</p>}
+
     </div>
-  )
+  );
 }

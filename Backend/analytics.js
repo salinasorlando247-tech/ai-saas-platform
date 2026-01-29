@@ -1,21 +1,16 @@
-import fs from "fs";
-import path from "path";
+export const analyticsData = {
+  YouTube: [],
+  TikTok: [],
+  Instagram: [],
+  LinkedIn: [],
+  Snapchat: []
+};
 
-const analyticsFile = path.resolve("./analytics.json");
-
-export function getAnalytics() {
-  try {
-    const data = fs.readFileSync(analyticsFile, "utf-8");
-    return JSON.parse(data);
-  } catch (err) {
-    return { likes: 0, shares: 0, comments: 0 };
-  }
+export function addAnalytics(platform, videoName, metrics) {
+  if (!analyticsData[platform]) analyticsData[platform] = [];
+  analyticsData[platform].push({ videoName, ...metrics });
 }
 
-export function trackEngagement(post, metrics) {
-  const analytics = getAnalytics();
-  analytics.likes += metrics.likes || 0;
-  analytics.shares += metrics.shares || 0;
-  analytics.comments += metrics.comments || 0;
-  fs.writeFileSync(analyticsFile, JSON.stringify(analytics, null, 2));
+export function getAnalytics(platform) {
+  return platform ? analyticsData[platform] : analyticsData;
 }

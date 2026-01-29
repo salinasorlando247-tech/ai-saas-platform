@@ -1,38 +1,43 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-export default function VideoEditor({ videoPath, refreshQueue }) {
+function VideoEditor({ userId }) {
+  const [videoFile, setVideoFile] = useState(null);
   const [instructions, setInstructions] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [platform, setPlatform] = useState("YouTube");
 
-  const handleEdit = async () => {
-    setLoading(true);
+  const handleSubmit = async () => {
+    if (!videoFile) return alert("Select a video first");
+    const formData = new FormData();
+    formData.append("videoFile", videoFile);
+    formData.append("editInstructions", instructions);
+    formData.append("platform", platform);
+    formData.append("autoPost", true);
+
     try {
-      const res = await axios.post("http://localhost:5000/api/video/edit", {
-        videoPath,
-        instructions,
-      });
-      alert(`Video edited successfully: ${res.data.editedVideo}`);
-      refreshQueue();
+      const res = await axios.post("http://localhost:5000/edit-video", formData);
+      alert(`Video ready: ${res.data.videoName}`);
     } catch (err) {
       console.error(err);
-      alert("AI editing failed: " + err.response?.data?.error || err.message);
-    } finally {
-      setLoading(false);
+      alert("Video editing failed");
     }
   };
 
   return (
-    <div style={{ marginTop: 20 }}>
-      <textarea
-        placeholder="Enter instructions (e.g., turn me into a cyborg)"
-        value={instructions}
-        onChange={(e) => setInstructions(e.target.value)}
-        style={{ width: "100%", height: 80 }}
-      />
-      <button onClick={handleEdit} disabled={loading}>
-        {loading ? "Editing..." : "AI Edit Video"}
-      </button>
+    <div>
+      <h2>Video Editor</h2>
+      <input type="file" accept="video/*" onChange={e => setVideoFile(e.target.files[0])} />
+      <input type="text" placeholder="Edit instructions" value={instructions} onChange={e => setInstructions(e.target.value)} />
+      <select value={platform} onChange={e => setPlatform(e.target.value)}>
+        <option>YouTube</option>
+        <option>Instagram</option>
+        <option>TikTok</option>
+        <option>LinkedIn</option>
+        <option>Snapchat</option>
+      </select>
+      <button onClick={handleSubmit}>Create/Edit Video</button>
     </div>
   );
 }
+
+export default VideoEditor;

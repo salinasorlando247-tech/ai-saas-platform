@@ -1,16 +1,11 @@
-const scheduledJobs = [];
+import cron from "node-cron";
 
-export function addSchedule(job) {
+const scheduler = () => {
+  console.log("✅ Main backend scheduler started");
 
-  scheduledJobs.push({
-    ...job,
-    status: "scheduled",
-    createdAt: new Date()
+  cron.schedule("*/5 * * * *", () => {
+    console.log("⏱ Running scheduled backend job...");
   });
+};
 
-  return { success: true };
-}
-
-export function getSchedules() {
-  return scheduledJobs;
-}
+export default scheduler;

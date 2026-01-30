@@ -3,7 +3,6 @@ import Dashboard from "./components/Dashboard";
 import "./App.css";
 
 export default function App() {
-
   return (
     <div className="app-shell">
 
@@ -12,7 +11,7 @@ export default function App() {
         <h2>AI Content Platform</h2>
       </header>
 
-      {/* Body Layout */}
+      {/* App Body */}
       <div className="app-body">
 
         {/* Sidebar */}
@@ -20,7 +19,8 @@ export default function App() {
           <p>Dashboard</p>
           <p>Scheduler</p>
           <p>Analytics</p>
-          <p>Billing</p>
+          <p>Viral Score</p>
+          <p>Payments</p>
           <p>Settings</p>
         </aside>
 

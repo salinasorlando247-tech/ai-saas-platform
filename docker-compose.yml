@@ -1,17 +1,13 @@
 version: "3.9"
-
 services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.backend
     container_name: nodetest-backend
     ports:
       - "5000:5000"
-    volumes:
-      - .:/app
-    environment:
-      - NODE_ENV=production
+    restart: always
 
   frontend:
     build:
@@ -19,4 +15,5 @@ services:
       dockerfile: Dockerfile
     container_name: nodetest-frontend
     ports:
-      - "3000:80"
+      - "5173:80"
+    restart: always

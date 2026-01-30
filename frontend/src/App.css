@@ -1,14 +1,18 @@
+/* General reset */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background: #f1f5f9;
 }
 
+/* App Shell */
 .app-shell {
   height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* Top Navbar */
 .top-nav {
   height: 60px;
   background: #0f172a;
@@ -16,13 +20,16 @@ body {
   display: flex;
   align-items: center;
   padding-left: 20px;
+  font-weight: bold;
 }
 
+/* App Body */
 .app-body {
   flex: 1;
   display: flex;
 }
 
+/* Sidebar */
 .sidebar {
   width: 220px;
   background: #111827;
@@ -33,13 +40,16 @@ body {
 .sidebar p {
   cursor: pointer;
   margin-bottom: 15px;
+  font-size: 16px;
 }
 
+/* Main Content */
 .main-content {
   flex: 1;
   padding: 20px;
-  background: #f1f5f9;
 }
+
+/* Card Component */
 .card {
   background: white;
   padding: 20px;
@@ -49,7 +59,25 @@ body {
 }
 
 button {
-  padding: 10px;
+  padding: 10px 15px;
   margin-top: 10px;
   cursor: pointer;
+  background: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background: #1e293b;
+}
+
+/* Dashboard spacing */
+.dashboard-container > div.card {
+  margin-bottom: 20px;
+}
+
+/* Analytics styling */
+.analytics-item {
+  margin-bottom: 10px;
 }

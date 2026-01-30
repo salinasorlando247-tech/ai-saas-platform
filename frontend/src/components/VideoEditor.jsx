@@ -1,43 +1,49 @@
 import React, { useState } from "react";
-import axios from "axios";
 
-function VideoEditor({ userId }) {
-  const [videoFile, setVideoFile] = useState(null);
-  const [instructions, setInstructions] = useState("");
-  const [platform, setPlatform] = useState("YouTube");
+export default function VideoEditor() {
 
-  const handleSubmit = async () => {
-    if (!videoFile) return alert("Select a video first");
-    const formData = new FormData();
-    formData.append("videoFile", videoFile);
-    formData.append("editInstructions", instructions);
-    formData.append("platform", platform);
-    formData.append("autoPost", true);
+  const [effect, setEffect] = useState("cyborg");
+  const [status, setStatus] = useState("");
 
-    try {
-      const res = await axios.post("http://localhost:5000/edit-video", formData);
-      alert(`Video ready: ${res.data.videoName}`);
-    } catch (err) {
-      console.error(err);
-      alert("Video editing failed");
-    }
+  const renderVideo = async () => {
+
+    setStatus("Rendering AI video...");
+
+    await fetch("http://localhost:5000/api/render", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        effect,
+        video: "demo.mp4",
+        overlay: "dragon@00:05"
+      })
+    });
+
+    setStatus("AI render job queued");
   };
 
   return (
-    <div>
-      <h2>Video Editor</h2>
-      <input type="file" accept="video/*" onChange={e => setVideoFile(e.target.files[0])} />
-      <input type="text" placeholder="Edit instructions" value={instructions} onChange={e => setInstructions(e.target.value)} />
-      <select value={platform} onChange={e => setPlatform(e.target.value)}>
-        <option>YouTube</option>
-        <option>Instagram</option>
-        <option>TikTok</option>
-        <option>LinkedIn</option>
-        <option>Snapchat</option>
+    <div className="card">
+
+      <h2>AI Video Editor</h2>
+
+      <select value={effect} onChange={e => setEffect(e.target.value)}>
+        <option value="cyborg">Cyborg</option>
+        <option value="anime">Anime</option>
+        <option value="cinematic">Cinematic</option>
       </select>
-      <button onClick={handleSubmit}>Create/Edit Video</button>
+
+      <button onClick={renderVideo}>
+        Render AI Video
+      </button>
+
+      {status && <p>{status}</p>}
+
+      <div style={{ marginTop: "10px" }}>
+        <p>Preview (Mock)</p>
+        <div style={{ height: "150px", background: "#ddd" }} />
+      </div>
+
     </div>
   );
 }
-
-export default VideoEditor;

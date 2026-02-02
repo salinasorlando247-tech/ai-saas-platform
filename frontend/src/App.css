@@ -1,83 +1,8 @@
-/* General reset */
-body {
+.app-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  color: #333;
+  min-height: 100vh;
+  padding: 0;
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f1f5f9;
-}
-
-/* App Shell */
-.app-shell {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Top Navbar */
-.top-nav {
-  height: 60px;
-  background: #0f172a;
-  color: white;
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-  font-weight: bold;
-}
-
-/* App Body */
-.app-body {
-  flex: 1;
-  display: flex;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background: #111827;
-  color: white;
-  padding: 20px;
-}
-
-.sidebar p {
-  cursor: pointer;
-  margin-bottom: 15px;
-  font-size: 16px;
-}
-
-/* Main Content */
-.main-content {
-  flex: 1;
-  padding: 20px;
-}
-
-/* Card Component */
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
-}
-
-button {
-  padding: 10px 15px;
-  margin-top: 10px;
-  cursor: pointer;
-  background: #0f172a;
-  color: white;
-  border: none;
-  border-radius: 5px;
-}
-
-button:hover {
-  background: #1e293b;
-}
-
-/* Dashboard spacing */
-.dashboard-container > div.card {
-  margin-bottom: 20px;
-}
-
-/* Analytics styling */
-.analytics-item {
-  margin-bottom: 10px;
 }

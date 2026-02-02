@@ -1,19 +1,28 @@
 version: "3.9"
+
 services:
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
-    container_name: nodetest-backend
+    build: ./Backend
+    container_name: ai_backend
     ports:
-      - "5000:5000"
-    restart: always
+      - "5001:5001"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./Backend/generated:/app/generated
+    depends_on:
+      - redis
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: nodetest-frontend
+    build: ./frontend
+    container_name: ai_frontend
     ports:
-      - "5173:80"
-    restart: always
+      - "80:80"
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"

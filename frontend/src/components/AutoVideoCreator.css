@@ -1,0 +1,58 @@
+.auto-video-creator {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auto-video-creator textarea {
+  width: 100%;
+  max-width: 500px;
+  height: 80px;
+  border-radius: 5px;
+  border: none;
+  padding: 10px;
+  background-color: #1f1f4a;
+  color: #fff;
+  resize: none;
+}
+
+.auto-video-creator button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #4a47a3;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auto-video-creator button:hover {
+  background-color: #5c55c7;
+}
+
+.video-preview {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.video-preview video {
+  border-radius: 10px;
+  background-color: #000;
+}
+
+.feedback {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.feedback select {
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  background-color: #1f1f4a;
+  color: #fff;
+}

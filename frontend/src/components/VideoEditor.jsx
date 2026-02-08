@@ -1,85 +1,91 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../config";
 
-const VideoEditor = () => {
-  const [videoFile, setVideoFile] = useState(null);
-  const [editedVideoURL, setEditedVideoURL] = useState("");
-  const [instruction, setInstruction] = useState(""); // AI instruction input
+export default function VideoEditor() {
+  const [file, setFile] = useState(null);
+  const [edits, setEdits] = useState([]);
   const [clips, setClips] = useState([]);
+  const [overlays, setOverlays] = useState([]);
+  const [effects, setEffects] = useState([]);
+  const [speed, setSpeed] = useState(1);
+  const [brightness, setBrightness] = useState(100);
+  const [videoPreview, setVideoPreview] = useState(null);
 
-  // Upload video
-  const handleFileChange = e => setVideoFile(e.target.files[0]);
-
-  // Send video + instruction to AI backend
-  const uploadAndEdit = async () => {
-    if (!videoFile) return alert("Select a video first!");
-
-    const formData = new FormData();
-    formData.append("video", videoFile);
-    formData.append("instruction", instruction);
-
-    const res = await axios.post(
-      "http://localhost:5001/api/edit-video-multi",
-      formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
-
-    setEditedVideoURL(res.data.editedVideoUrl);
-
-    // AI can return multiple short clips if requested
-    if (res.data.clips) setClips(res.data.clips);
+  // Upload file
+  const handleUpload = (e) => {
+    const f = e.target.files[0];
+    setFile(f);
+    setVideoPreview(URL.createObjectURL(f));
   };
 
-  // Like video → auto publish
-  const likeVideo = async () => {
-    await axios.post("http://localhost:5001/api/publish-video", {
-      videoURL: editedVideoURL,
-      day: "Friday", // replace with client-selected day
-      clientID: "client_123",
-      videoMeta: { hashtags: ["#Manual"], cta: "Watch Now!", effects: [] }
-    });
-    alert("Video liked and scheduled at best time!");
+  // Add a clip section
+  const addClip = () => {
+    const start = prompt("Start time (sec)");
+    const end = prompt("End time (sec)");
+    setClips([...clips, { start: Number(start), end: Number(end) }]);
+  };
+
+  // Add overlay
+  const addOverlay = () => {
+    const text = prompt("Overlay text/image URL");
+    const time = prompt("Time in sec for overlay to appear");
+    setOverlays([...overlays, { text, time: Number(time) }]);
+  };
+
+  // Apply AI Effect
+  const addEffect = () => {
+    const effectName = prompt("Enter AI effect (color, motion, etc.)");
+    setEffects([...effects, effectName]);
+  };
+
+  // Apply edits
+  const applyEdits = async () => {
+    if (!file) return alert("Upload a video first!");
+
+    const formData = new FormData();
+    formData.append("video", file);
+    formData.append("clips", JSON.stringify(clips));
+    formData.append("overlays", JSON.stringify(overlays));
+    formData.append("effects", JSON.stringify(effects));
+    formData.append("speed", speed);
+    formData.append("brightness", brightness);
+
+    try {
+      const res = await axios.post(`${API_BASE}/manual-edit`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert("Video edited successfully!");
+      setVideoPreview(res.data.path);
+    } catch (err) {
+      console.error(err);
+      alert("Error editing video");
+    }
   };
 
   return (
-    <div className="manual-video-editor">
-      <h3>Manual Video Editor (Fully AI-Powered)</h3>
-
-      <input type="file" accept="video/*" onChange={handleFileChange} />
-      <textarea
-        placeholder="Describe any edit: clip, speed, darken, add overlay, special effects..."
-        value={instruction}
-        onChange={e => setInstruction(e.target.value)}
-        rows={4}
-        style={{ width: "100%", marginTop: "10px" }}
-      />
-      <button onClick={uploadAndEdit} style={{ marginTop: "10px" }}>
-        Upload & Apply AI Edits
-      </button>
-
-      {editedVideoURL && (
-        <div style={{ marginTop: "20px" }}>
-          <h4>Edited Video</h4>
-          <video src={editedVideoURL} controls width="500" />
-          <div className="effect-row" style={{ marginTop: "10px" }}>
-            <button onClick={likeVideo}>I Like This Video</button>
-            <button onClick={() => alert("AI will re-edit based on your new instructions")}>
-              Dislike / Change Video
-            </button>
-          </div>
-        </div>
-      )}
-
-      {clips.length > 0 && (
-        <div style={{ marginTop: "20px" }}>
-          <h4>Short-Form Clips Generated</h4>
-          {clips.map((clip, i) => (
-            <video key={i} src={clip} controls width="300" style={{ margin: "5px" }} />
-          ))}
-        </div>
-      )}
+    <div>
+      <h2>Manual Video Editor</h2>
+      <input type="file" accept="video/*" onChange={handleUpload} />
+      {videoPreview && <video src={videoPreview} controls style={{ maxWidth: "100%" }} />}
+      <div style={{ marginTop: 10 }}>
+        <button onClick={addClip}>Add Clip Section</button>
+        <button onClick={addOverlay}>Add Overlay</button>
+        <button onClick={addEffect}>Add AI Effect</button>
+        <input
+          type="number"
+          placeholder="Speed (1 normal)"
+          value={speed}
+          onChange={(e) => setSpeed(Number(e.target.value))}
+        />
+        <input
+          type="number"
+          placeholder="Brightness (%)"
+          value={brightness}
+          onChange={(e) => setBrightness(Number(e.target.value))}
+        />
+        <button onClick={applyEdits}>Apply Edits</button>
+      </div>
     </div>
   );
-};
-
-export default VideoEditor;
+}

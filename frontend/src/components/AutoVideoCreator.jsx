@@ -1,57 +1,47 @@
 import React, { useState } from "react";
-import axios from "axios";
 
-const AutoVideoCreator = () => {
+export default function AutoVideoCreator() {
   const [prompt, setPrompt] = useState("");
-  const [industry, setIndustry] = useState("");
-  const [videoURL, setVideoURL] = useState("");
-  const [videoMeta, setVideoMeta] = useState({});
+  const [status, setStatus] = useState("");
 
-  const generateAI = async () => {
-    const res = await axios.post("http://localhost:5001/api/create-ai-video", {
-      prompt,
-      industry
-    });
-    setVideoURL(res.data.videoUrl);
-    setVideoMeta(res.data.videoMeta);
+  const generateVideo = () => {
+    setStatus("AI generating video...");
   };
 
-  const likeVideo = async () => {
-    // Auto-schedule publish
-    await axios.post("http://localhost:5001/api/publish-video", {
-      videoURL,
-      day: "Friday", // example default, could be client selected
-      clientID: "client_123",
-      videoMeta
-    });
-    alert("Video liked and scheduled at best time!");
+  const approveVideo = () => {
+    setStatus("AI approved — Scheduling optimized post...");
+  };
+
+  const regenerateVideo = () => {
+    setStatus("AI regenerating with analytics improvements...");
   };
 
   return (
-    <div className="auto-video-creator">
-      <h3>AI Video Creator</h3>
-      <input
-        type="text"
-        placeholder="Prompt for AI"
+    <div className="p-6">
+      <h2 className="text-xl font-bold mb-4">AI Video Creator</h2>
+
+      <textarea
+        placeholder="Enter prompt or script"
+        className="w-full p-2 border rounded"
         value={prompt}
-        onChange={e => setPrompt(e.target.value)}
+        onChange={(e) => setPrompt(e.target.value)}
       />
-      <input
-        type="text"
-        placeholder="Client Industry"
-        value={industry}
-        onChange={e => setIndustry(e.target.value)}
-      />
-      <button onClick={generateAI}>Generate Video</button>
-      {videoURL && (
-        <div>
-          <video src={videoURL} controls width="400" />
-          <button onClick={likeVideo}>I Like This Video</button>
-          <button onClick={() => alert("Regenerating AI video...")}>Dislike / Change Video</button>
-        </div>
-      )}
+
+      <div className="flex gap-3 mt-4">
+        <button onClick={generateVideo} className="px-3 py-2 bg-purple-700 text-white rounded">
+          Generate Video
+        </button>
+
+        <button onClick={approveVideo} className="px-3 py-2 bg-green-600 text-white rounded">
+          I Like This Video
+        </button>
+
+        <button onClick={regenerateVideo} className="px-3 py-2 bg-red-600 text-white rounded">
+          Regenerate
+        </button>
+      </div>
+
+      <p className="mt-4 text-gray-600">{status}</p>
     </div>
   );
-};
-
-export default AutoVideoCreator;
+}

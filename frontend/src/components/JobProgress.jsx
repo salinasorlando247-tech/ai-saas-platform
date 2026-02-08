@@ -1,36 +1,33 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { socket } from "../lib/Socket";
 
-export default function JobProgress(){
+export default function JobProgress({ jobId }) {
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState("Starting...");
 
-  const [jobs,setJobs] = useState([]);
+  useEffect(() => {
+    socket.emit("join-job", jobId);
 
-  useEffect(()=>{
+    socket.on("job-progress", (data) => {
+      setProgress(data.progress);
+      setStatus(data.status);
+    });
 
-    const fetchJobs = async ()=>{
-      const token = localStorage.getItem("token");
-
-      const res = await axios.get("/api/videos/status",{
-        headers:{Authorization:`Bearer ${token}`}
-      });
-
-      setJobs(res.data);
+    return () => {
+      socket.off("job-progress");
     };
-
-    fetchJobs();
-    setInterval(fetchJobs,3000);
-
-  },[]);
+  }, [jobId]);
 
   return (
-    <div>
-      <h2>Processing Queue</h2>
-
-      {jobs.map(j=>(
-        <div key={j.id}>
-          Video {j.id} — {j.progress}%
-        </div>
-      ))}
+    <div className="w-full bg-zinc-900 p-4 rounded-lg">
+      <div className="text-sm mb-2">{status}</div>
+      <div className="w-full bg-zinc-700 h-2 rounded">
+        <div
+          className="bg-emerald-500 h-2 rounded transition-all"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      <div className="text-xs mt-1">{progress}%</div>
     </div>
   );
 }

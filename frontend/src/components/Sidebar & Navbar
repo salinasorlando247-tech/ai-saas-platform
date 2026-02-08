@@ -1,0 +1,28 @@
+// Sidebar.jsx
+import { Link } from 'react-router-dom';
+const Sidebar = () => (
+  <div className="w-64 bg-gray-800 text-white flex flex-col p-4">
+    <Link to="/dashboard" className="mb-2">Dashboard</Link>
+    <Link to="/dashboard/upload" className="mb-2">Upload</Link>
+    <Link to="/dashboard/ai" className="mb-2">AI Generator</Link>
+    <Link to="/dashboard/schedule" className="mb-2">Scheduling</Link>
+    <Link to="/dashboard/analytics" className="mb-2">Analytics</Link>
+    <Link to="/dashboard/competitor" className="mb-2">Competitor</Link>
+  </div>
+);
+
+export default Sidebar;
+
+// Navbar.jsx
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+const Navbar = () => {
+  const { logoutUser } = useContext(AuthContext);
+  return (
+    <div className="h-16 bg-gray-100 flex items-center justify-end px-4 shadow">
+      <button onClick={logoutUser} className="bg-red-500 text-white px-3 py-1 rounded">Logout</button>
+    </div>
+  );
+};
+
+export default Navbar;

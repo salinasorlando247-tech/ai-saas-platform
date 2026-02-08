@@ -1,16 +1,22 @@
 import React from "react";
+import { FaBell, FaUserCircle } from "react-icons/fa";
 
-function Navbar() {
+const Navbar = () => {
   return (
-    <nav className="navbar">
-      <h1>AI Social Media Automater</h1>
-      <ul className="nav-links">
-        <li><a href="#dashboard">Dashboard</a></li>
-        <li><a href="#editor">Video Editor</a></li>
-        <li><a href="#payments">Payments</a></li>
-      </ul>
-    </nav>
+    <header className="bg-gray-800 text-white flex justify-between items-center h-16 px-6 ml-64">
+      <div className="text-xl font-bold">ForgeAI Dashboard</div>
+      <div className="flex items-center space-x-4">
+        <button className="relative">
+          <FaBell size={20} />
+          <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <FaUserCircle size={24} />
+          <span>Admin</span>
+        </div>
+      </div>
+    </header>
   );
-}
+};
 
 export default Navbar;

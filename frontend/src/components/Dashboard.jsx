@@ -1,91 +1,97 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import FacelessUsageMeter from "./FacelessUsageMeter.jsx";
 
 export default function Dashboard() {
-  const [videos, setVideos] = useState([]);
-  const [prompt, setPrompt] = useState("");
-  const [title, setTitle] = useState("");
-  const [scheduledAt, setScheduledAt] = useState("");
-  const [userToken, setUserToken] = useState(localStorage.getItem("token"));
-  const [remainingCredits, setRemainingCredits] = useState(0);
-
-  const loadVideos = async () => {
-    try {
-      const res = await axios.get("/api/videos", {
-        headers: { Authorization: `Bearer ${userToken}` }
-      });
-      setVideos(res.data.videos);
-      setRemainingCredits(res.data.credits);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const [analytics, setAnalytics] = useState(null);
+  const [schedule, setSchedule] = useState([]);
+  const [referrals, setReferrals] = useState([]);
 
   useEffect(() => {
-    loadVideos();
+    // Load AI insights
+    axios.get("/api/analytics").then(res => setAnalytics(res.data));
+
+    // Load AI scheduler recommendations
+    axios.get("/api/scheduler/recommend").then(res => setSchedule(res.data));
+
+    // Load referral earnings
+    axios.get("/api/referrals").then(res => setReferrals(res.data));
   }, []);
 
-  const handleCreateVideo = async () => {
-    if (!prompt) return alert("Enter a prompt");
-    try {
-      const res = await axios.post("/api/videos/create",
-        { prompt, title, scheduled_at: scheduledAt || null },
-        { headers: { Authorization: `Bearer ${userToken}` } }
-      );
-      setPrompt("");
-      setTitle("");
-      setScheduledAt("");
-      setRemainingCredits(res.data.remainingCredits);
-      loadVideos();
-    } catch (err) {
-      alert(err.response?.data?.error || "Error creating video");
-      console.error(err);
-    }
-  };
+  if (!analytics) return <p>Loading Dashboard...</p>;
 
   return (
-    <div style={{ padding: 40 }}>
-      <h1>Dashboard</h1>
-      <p>Remaining Credits: {remainingCredits}</p>
+    <div className="dashboard">
+      <h2>ForgeAI Dashboard</h2>
 
-      {/* Video creation */}
-      <div style={{ marginBottom: 20 }}>
-        <input
-          type="text"
-          placeholder="Video title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          style={{ marginRight: 10 }}
-        />
-        <input
-          type="text"
-          placeholder="Prompt for AI video"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          style={{ marginRight: 10 }}
-        />
-        <input
-          type="datetime-local"
-          value={scheduledAt}
-          onChange={(e) => setScheduledAt(e.target.value)}
-          style={{ marginRight: 10 }}
-        />
-        <button onClick={handleCreateVideo}>Create Video</button>
-      </div>
+      {/* Faceless Usage */}
+      <FacelessUsageMeter />
 
-      {/* Video queue */}
-      <div>
-        <h2>Your Videos</h2>
-        {videos.length === 0 && <p>No videos yet.</p>}
+      {/* AI Insights */}
+      <section>
+        <h3>AI Recommendations & Insights</h3>
         <ul>
-          {videos.map((v) => (
-            <li key={v.id}>
-              <strong>{v.title}</strong> | Status: {v.status} | Progress: {v.progress}%
-              {v.scheduled_at && ` | Scheduled: ${new Date(v.scheduled_at).toLocaleString()}`}
+          {analytics.insights.map((insight, idx) => (
+            <li key={idx}>
+              <strong>{insight.type}:</strong> {insight.message}{" "}
+              {insight.fix ? <em>Fix: {insight.fix}</em> : null}
             </li>
           ))}
         </ul>
-      </div>
+        <p>
+          <strong>Revenue Potential Score:</strong> {analytics.monetization.revenuePotentialScore.toFixed(2)}{" "}
+          <br />
+          <strong>Referral Impact:</strong> ${analytics.monetization.referralImpact.toFixed(2)}
+        </p>
+      </section>
+
+      {/* Scheduler Recommendations */}
+      <section>
+        <h3>Recommended Posting Times</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Recommended Time</th>
+              <th>Reason</th>
+              <th>Warning</th>
+            </tr>
+          </thead>
+          <tbody>
+            {schedule.map((s, idx) => (
+              <tr key={idx}>
+                <td>{s.platform}</td>
+                <td>{s.recommendedTime}</td>
+                <td>{s.reason}</td>
+                <td style={{color:"red"}}>{s.warning || ""}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      {/* Referral Earnings */}
+      <section>
+        <h3>Referral Earnings (Pending)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Referrer</th>
+              <th>Payout ($)</th>
+              <th>Available At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {referrals.map((r, idx) => (
+              <tr key={idx}>
+                <td>{r.referrerId}</td>
+                <td>{r.payout.toFixed(2)}</td>
+                <td>{new Date(r.availableAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
     </div>
   );
 }

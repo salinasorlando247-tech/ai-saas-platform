@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "email": "admin@yourdomain.com",
+      "password": "$2b$10$REPLACE_WITH_HASH",
+      "tier": "enterprise",
+      "role": "admin",
+      "suspended": false,
+      "verified": true,
+      "verifyToken": null,
+      "resetToken": null
+    }
+  ]
+}

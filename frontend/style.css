@@ -1,8 +1,0 @@
-body { background-color: #0d0d0d; color: #fff; font-family: 'Roboto', sans-serif; }
-.header { text-align: center; padding: 20px; color: lime; text-shadow: 0 0 10px #0f0; }
-.app-container main { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 20px; }
-.queue-section, .analytics-section, .payments-section { background: #1a1a1a; border-radius: 10px; padding: 20px; box-shadow: 0 0 20px rgba(0,255,0,0.2); }
-.queue-item, .analytics-card, .tier-card { margin-bottom: 20px; padding: 15px; border-radius: 10px; background: #111; box-shadow: 0 0 10px rgba(0,255,0,0.3); }
-textarea { width: 100%; padding: 10px; border-radius: 5px; background: #222; color: #fff; border: 1px solid #0f0; }
-button, .buy-btn { padding: 10px 20px; border: none; border-radius: 5px; background: lime; color: #000; font-weight: bold; cursor: pointer; transition: 0.2s; }
-button:hover, .buy-btn:hover { background: #0f0; transform: scale(1.05); }

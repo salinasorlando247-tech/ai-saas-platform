@@ -1,16 +1,9 @@
-const scheduledPosts = [];
+export const Scheduler = {
+  schedule: async (videoId, dateTime) => {
+    // Logic for scheduling a single video
+  },
 
-export function schedulePost(data) {
-
-  scheduledPosts.push({
-    ...data,
-    status: "scheduled",
-    created: new Date()
-  });
-
-  return { success: true };
-}
-
-export function getScheduledPosts() {
-  return scheduledPosts;
-}
+  bulkSchedule: async (videos) => {
+    // Logic for scheduling multiple videos at once
+  },
+};

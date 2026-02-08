@@ -1,14 +1,1 @@
-{
-  "clients": {
-    "ClientA": {
-      "posts": [],
-      "engagement": [],
-      "bestTimes": {}
-    },
-    "ClientB": {
-      "posts": [],
-      "engagement": [],
-      "bestTimes": {}
-    }
-  }
-}
+{}

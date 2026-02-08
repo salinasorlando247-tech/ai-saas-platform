@@ -1,16 +1,43 @@
-import express from "express"
-import { schedulePost, scheduledPosts } from "../services/scheduler.js"
+// backend/routes/scheduler.js
+import express from "express";
+import pool from "../db.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.post("/add", (req,res)=>{
-  const { content, media, platforms, postTime } = req.body
-  schedulePost({id:"user1"}, content, media, platforms, postTime)
-  res.json({ success:true, message:"Post scheduled successfully" })
-})
+// GET scheduled videos for a user
+router.get("/user/:userId", authMiddleware, async (req, res) => {
+  const { userId } = req.params;
 
-router.get("/list", (req,res)=>{
-  res.json({ posts: scheduledPosts })
-})
+  try {
+    const [rows] = await pool.query(
+      `SELECT s.*, v.title, v.platform 
+       FROM scheduler s 
+       JOIN videos v ON s.video_id = v.id 
+       WHERE s.user_id = ?`,
+      [userId]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error("Error fetching scheduler:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
-export default router
+// POST schedule a video
+router.post("/", authMiddleware, async (req, res) => {
+  const { user_id, video_id, scheduled_time } = req.body;
+
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO scheduler (user_id, video_id, scheduled_time) VALUES (?, ?, ?)",
+      [user_id, video_id, scheduled_time]
+    );
+    res.json({ message: "Video scheduled", schedulerId: result.insertId });
+  } catch (err) {
+    console.error("Error scheduling video:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+export default router;

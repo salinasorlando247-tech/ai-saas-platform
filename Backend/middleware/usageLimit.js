@@ -1,30 +1,9 @@
-const { Pool } = require("pg");
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+import Plan from '../models/Plan.js';
+import Video from '../models/Video.js';
 
-module.exports = (limit)=>{
-
-  return async (req,res,next)=>{
-
-    const userId = req.user.id;
-
-    const result = await pool.query(
-      "SELECT videos_used, plan FROM users WHERE id=$1",
-      [userId]
-    );
-
-    const user = result.rows[0];
-
-    const limits = {
-      starter:30,
-      pro:150,
-      enterprise:999999
-    };
-
-    if(user.videos_used >= limits[user.plan]){
-      return res.status(403).json({error:"Monthly quota exceeded"});
-    }
-
-    next();
-  };
-
+export const usageLimit = async (req, res, next) => {
+  const plan = await Plan.findById(req.user.plan);
+  const videoCount = await Video.countDocuments({ owner: req.user._id, createdAt: { $gte: new Date().setMonth(new Date().getMonth() - 1) } });
+  if (videoCount >= plan.monthlyLimit) return res.status(403).json({ message: 'Monthly limit reached' });
+  next();
 };

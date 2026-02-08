@@ -1,12 +1,10 @@
-import express from "express";
+import express from 'express';
+import { recordAnalytics, getAnalytics } from '../controllers/analyticsController.js';
+import { protect } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
 
-// Mock analytics
-router.get("/", (req, res) => {
-  res.json({
-    "1": { views: 1200, likes: 200, comments: 50, shares: 10 },
-    "2": { views: 3400, likes: 500, comments: 90, shares: 25 }
-  });
-});
+router.post('/record', protect, recordAnalytics);
+router.get('/view/:videoId', protect, getAnalytics);
 
 export default router;

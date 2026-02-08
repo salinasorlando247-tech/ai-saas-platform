@@ -1,4 +1,4 @@
-import { generateAI } from "./aiEngine.js";
+import { generateAI } from "./AIEngine.js";
 
 export async function askAIQuestion(question) {
   try {

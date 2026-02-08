@@ -1,36 +1,24 @@
-import fs from "fs";
-import path from "path";
+import { spawn } from 'child_process';
+import path from 'path';
+import fs from 'fs';
+import S3 from 'aws-sdk/clients/s3';
 
-const analytics = {
-  YouTube: [],
-  Instagram: [],
-  TikTok: [],
-  LinkedIn: [],
-  Snapchat: []
-};
+const s3 = new S3({ region: process.env.AWS_REGION });
 
-export default {
-  async createContent({ videoFile, editInstructions, platform }) {
-    const outputName = `video_${Date.now()}.mp4`;
-    const outputPath = path.join("output_videos", outputName);
+export async function renderVideoAI(script, outputName) {
+  return new Promise((resolve, reject) => {
+    const outputPath = path.join(process.cwd(), 'tmp', `${outputName}.mp4`);
 
-    // --- AI Video Editing Simulation ---
-    fs.copyFileSync(videoFile, outputPath);
+    const worker = spawn('python', ['ai_renderer.py', '--script', script, '--output', outputPath]);
+    
+    worker.stdout.on('data', data => console.log(`AI Worker: ${data}`));
+    worker.stderr.on('data', err => console.error(`AI Worker Error: ${err}`));
 
-    // Save analytics placeholder
-    analytics[platform].push({ videoName: outputName, date: new Date(), performance: {} });
-
-    return { videoName: outputName, platform, outputPath };
-  },
-
-  getAnalytics() {
-    return analytics;
-  },
-
-  async learnFromPerformance(platform, videoName, data) {
-    const video = analytics[platform].find(v => v.videoName === videoName);
-    if (video) {
-      video.performance = { ...video.performance, ...data };
-    }
-  }
-};
+    worker.on('close', async code => {
+      if (code !== 0) return reject('AI render failed');
+      const fileStream = fs.createReadStream(outputPath);
+      await s3.upload({ Bucket: process.env.S3_BUCKET, Key: outputName+'.mp4', Body: fileStream }).promise();
+      resolve(`s3://${process.env.S3_BUCKET}/${outputName}.mp4`);
+    });
+  });
+}

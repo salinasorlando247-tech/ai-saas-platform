@@ -1,37 +1,17 @@
-const express = require("express");
-const auth = require("../middleware/authMiddleware");
-const planCheck = require("../middleware/planCheck");
-const usageLimit = require("../middleware/usageLimit");
+import express from "express";
+import { generateVideo } from "../services/aiVideoService.js";
 
 const router = express.Router();
 
-router.post(
-  "/create",
-  auth,
-  planCheck("starter"),
-  usageLimit(),
-  async (req,res)=>{
-    res.json({success:true});
-  }
-);
+router.post("/create", async (req, res) => {
+  const user = req.user;
 
-router.post(
-  "/bulk",
-  auth,
-  planCheck("pro"),
-  usageLimit(),
-  async (req,res)=>{
-    res.json({success:true});
-  }
-);
+  const result = await generateVideo({
+    user,
+    ...req.body
+  });
 
-router.post(
-  "/auto",
-  auth,
-  planCheck("enterprise"),
-  async (req,res)=>{
-    res.json({success:true});
-  }
-);
+  res.json(result);
+});
 
-module.exports = router;
+export default router;

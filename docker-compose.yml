@@ -1,28 +1,17 @@
 version: "3.9"
-
 services:
-  backend:
-    build: ./Backend
-    container_name: ai_backend
+  app:
+    build: ./backend
+    container_name: ai_app
+    restart: always
+    env_file: .env
     ports:
-      - "5001:5001"
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-    volumes:
-      - ./Backend/generated:/app/generated
+      - "5000:5000"
     depends_on:
       - redis
-
-  frontend:
-    build: ./frontend
-    container_name: ai_frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-
   redis:
-    image: redis:7-alpine
-    container_name: redis
+    image: "redis:7-alpine"
+    container_name: ai_redis
     ports:
       - "6379:6379"
+    restart: always

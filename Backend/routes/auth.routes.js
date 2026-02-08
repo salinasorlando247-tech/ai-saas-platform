@@ -1,67 +1,56 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
+const router = express.Router();
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { Pool } = require("pg");
 
-const router = express.Router();
-
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
 });
 
-// SIGNUP
-router.post("/signup", async (req,res)=>{
-
-  const { email,password,company } = req.body;
+// ===== SIGNUP =====
+router.post("/signup", async (req, res) => {
+  const { email, password, name } = req.body;
+  if (!email || !password || !name) return res.status(400).json({ message: "Missing fields" });
 
   try {
+    const userExists = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
+    if (userExists.rows.length) return res.status(400).json({ message: "User already exists" });
 
-    const hash = await bcrypt.hash(password,10);
-
-    await pool.query(
-      "INSERT INTO users(email,password,company,plan) VALUES($1,$2,$3,'starter')",
-      [email,hash,company]
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await pool.query(
+      "INSERT INTO users(name, email, password, is_beta) VALUES($1,$2,$3,$4) RETURNING id, email, name, is_beta",
+      [name, email, hashedPassword, true] // default beta for demo clients
     );
 
-    res.json({success:true});
-
-  } catch(err){
-    res.status(500).json({error:"Signup failed"});
+    const token = jwt.sign({ id: newUser.rows[0].id }, process.env.JWT_SECRET, { expiresIn: "2h" });
+    res.status(201).json({ user: newUser.rows[0], token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// LOGIN
-router.post("/login", async (req,res)=>{
-
-  const { email,password } = req.body;
+// ===== LOGIN =====
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ message: "Missing fields" });
 
   try {
+    const userResult = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
+    if (!userResult.rows.length) return res.status(400).json({ message: "User not found" });
 
-    const user = await pool.query(
-      "SELECT * FROM users WHERE email=$1",
-      [email]
-    );
+    const user = userResult.rows[0];
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Incorrect password" });
 
-    if(user.rows.length === 0) 
-      return res.status(400).json({error:"Invalid credentials"});
-
-    const valid = await bcrypt.compare(password,user.rows[0].password);
-
-    if(!valid) 
-      return res.status(400).json({error:"Invalid credentials"});
-
-    const token = jwt.sign(
-      { id:user.rows[0].id, plan:user.rows[0].plan },
-      process.env.JWT_SECRET,
-      { expiresIn:"7d" }
-    );
-
-    res.json({ token });
-
-  } catch(err){
-    res.status(500).json({error:"Login failed"});
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "2h" });
+    res.json({ user: { id: user.id, email: user.email, name: user.name, is_beta: user.is_beta }, token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
-
 });
 
 module.exports = router;

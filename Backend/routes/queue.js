@@ -1,21 +1,38 @@
 import express from "express";
-const router = express.Router();
-let queue = [
-  { id: 1, title: "Sample Video 1", filePath: "./videos/sample1.mp4", status: "pending" },
-  { id: 2, title: "Sample Video 2", filePath: "./videos/sample2.mp4", status: "pending" }
-];
+import { addJob } from "../models/queueModel.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
-router.get("/", (req, res) => res.json(queue));
-router.post("/approve/:id", (req, res) => {
-  const item = queue.find(v => v.id == req.params.id);
-  if (item) item.status = "approved";
-  res.json({ status: "approved" });
-});
-router.post("/recreate/:id", (req, res) => {
-  const item = queue.find(v => v.id == req.params.id);
-  if (item) {
-    const newFile = item.filePath.replace(".mp4", "-improved.mp4");
-    res.json({ status: "recreated", newFile });
+const router = express.Router();
+
+// Add video job
+router.post("/video", authMiddleware, async (req, res) => {
+  try {
+    const jobId = await addJob("VIDEO", req.body, 3);
+    res.json({ success: true, jobId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to queue video job" });
   }
 });
+
+// Add scheduling job
+router.post("/schedule", authMiddleware, async (req, res) => {
+  try {
+    const jobId = await addJob("SCHEDULE", req.body, 4);
+    res.json({ success: true, jobId });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to queue schedule job" });
+  }
+});
+
+// Add analytics job
+router.post("/analytics", authMiddleware, async (req, res) => {
+  try {
+    const jobId = await addJob("ANALYTICS", req.body, 2);
+    res.json({ success: true, jobId });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to queue analytics job" });
+  }
+});
+
 export default router;

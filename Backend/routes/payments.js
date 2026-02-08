@@ -1,12 +1,8 @@
-import express from "express";
+import express from 'express';
+import { createCheckoutSession, stripeWebhook } from '../controllers/paymentController.js';
 const router = express.Router();
 
-router.post("/create", async (req, res) => {
-
-  res.json({
-    url: "https://checkout.stripe.com/demo"
-  });
-
-});
+router.post('/create-checkout-session', createCheckoutSession);
+router.post('/webhook', stripeWebhook);
 
 export default router;

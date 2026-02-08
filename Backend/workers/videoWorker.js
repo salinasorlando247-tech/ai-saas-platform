@@ -1,21 +1,13 @@
-const queue = require("../queues/videoQueue");
-const { Pool } = require("pg");
+export async function runVideoJob(payload) {
+  console.log("🎬 AI Video Worker Running:", payload);
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  // Placeholder for:
+  // - AI generation
+  // - Editing
+  // - Rendering
+  // - Upload prep
 
-queue.process(async job => {
+  await new Promise(resolve => setTimeout(resolve, 3000));
 
-  const { videoId, userId, prompt } = job.data;
-
-  console.log("Processing job:", videoId);
-
-  // Simulate AI processing
-  await new Promise(res => setTimeout(res, 5000));
-
-  await pool.query(
-    "UPDATE videos SET status='completed', progress=100 WHERE id=$1",
-    [videoId]
-  );
-
-  return true;
-});
+  console.log("✅ Video Job Complete");
+}
